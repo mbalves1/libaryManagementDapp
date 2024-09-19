@@ -1,7 +1,7 @@
 
 
-const { expect } = require("Chai");
-const { ethers } = require("ethers");
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -92,6 +92,15 @@ describe("Library Contract", function() {
       const booksFromChain = await library.getFinishedBooks();
       expect(booksFromChain.length).to.equal(NUM_FINISHED_BOOK);
       verifyBookList(booksFromChain, finishedBookList);
+    });
+  });
+
+  describe("Set Finished", function() {
+    it("Should emit SetFinished event", async function() {
+      const BOOK_ID = 0;
+      const BOOK_FINISHED = true;
+
+      await expect(library.setFinished(BOOK_ID, BOOK_FINISHED)).to.emit(library, "SetFinished").withArgs(BOOK_ID, BOOK_FINISHED);
     });
   });
 
