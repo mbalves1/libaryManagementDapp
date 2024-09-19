@@ -14,6 +14,7 @@ contract Library {
   mapping(uint256 => address) bookToOwner;
 
   event AddBook(address recipient, uint bookId);
+  event SetFinished(uint bookId, bool finished);
 
   function addBook(string memory name, uint16 year, string memory author, bool finished) external {
     uint bookId = bookList.length;
@@ -47,6 +48,13 @@ contract Library {
 
   function getUnfinishedBooks() external view returns (Book[] memory) {
     return _getBookList(false);
+  }
+
+  function setFinished(uint bookId, bool finished) external {
+    if(bookToOwner[bookId] == msg.sender) {
+      bookList[bookId].finished = finished;
+      emit SetFinished(bookId, finished);
+    }
   }
 
 }
