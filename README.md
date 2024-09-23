@@ -13,3 +13,4 @@ npx hardhat ignition deploy ./ignition/modules/Lock.js
 ```
 
 ### alchemy.com
+npx hardhat run scripts/deploy.js --network mainnet
