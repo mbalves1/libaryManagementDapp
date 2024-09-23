@@ -14,3 +14,4 @@ npx hardhat ignition deploy ./ignition/modules/Lock.js
 
 ### alchemy.com
 npx hardhat run scripts/deploy.js --network mainnet
+quando criado o deploy vai gerar o address => incluir no config.j
