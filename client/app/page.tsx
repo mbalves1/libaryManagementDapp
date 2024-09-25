@@ -12,7 +12,8 @@ const Home:NextPage = () => {
   const [ bookName, setBookName ] = useState('')
   const [ bookAuthor, setBookAuthor ] = useState('')
   const [ bookYear, setBookYear ] = useState('')
-  const [ bookFinished, setBookFinished ] = useState('')
+  const [ bookFinished, setBookFinished ] = useState([])
+  const [ booksUnfinished, setBookUnfinished ] = useState([]) 
 
   const connectWallet = async () => {
     try {
@@ -56,6 +57,27 @@ const Home:NextPage = () => {
         const LibraryContract = new ethers.Contract(contractAddress, Library.abi, signer)
         const libraryTx = await LibraryContract.addBook(book.name, book.year, book.author, book.finished)
         console.log(libraryTx);
+      } else {
+        console.log("Ethereum object does not exist");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const getBooks = async () => {
+    try {
+      const {ethereum} = window
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum)
+        const signer = provider.getSigner()
+        const LibraryContract = new ethers.Contract(contractAddress, Library.abi, signer)
+
+        const booksFinished = await LibraryContract.getFinishedBooks()
+        const booksUnfinished = await LibraryContract.getUnFinishedBooks()
+
+        setBookFinished(booksFinished)
+        setBookUnfinished(booksUnfinished)
       } else {
         console.log("Ethereum object does not exist");
       }
