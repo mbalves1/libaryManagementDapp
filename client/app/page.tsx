@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 
 import Library from "../abi/Library.json"
 import { NextPage } from "next";
+import Book from "./components/Book";
 
 declare let window: any; 
 
@@ -121,6 +122,34 @@ const Home:NextPage = () => {
                   <button className="text-xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-10 ml-5 hover:scale-105 transition duration-500 ease-in-out"
                     onClick={submitBook}
                   >Add Book</button>
+                </div>
+                <div className="flex flex-col justify-center items-center">
+                  <div className="font-semibold text-lg text-center mb-4">
+                    Books List
+                  </div>
+                  <button className="text-xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out">Get Books</button>
+                  {
+                    booksUnfinished.length > 0 ?
+                      <div className="font-semibold text-lg text-center mb-4 mt-5">
+                        Books Unfinished ({booksUnfinished.length})
+                      </div> : <div></div>
+                  }
+
+                  <div className="flex flex-col justify-center items-center">
+                    {
+                      booksUnfinished.map((book) => (
+                        <Book
+                          key={book.id}
+                          id={parseInt(book.id)}
+                          name={book.name}
+                          year={parseInt(book.year).toString()}
+                          author={book.author}
+                          finished={book.finished.toString()}
+                          clickBookFinished={null}
+                        ></Book>
+                      ))
+                    }
+                  </div>
                 </div>
               </div>
             </div>
