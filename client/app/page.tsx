@@ -87,6 +87,23 @@ const Home:NextPage = () => {
     }
   }
 
+  const clickBookFinished = async (id) => {
+    try {
+      const {ethereum} = window
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum)
+        const signer = provider.getSigner()
+        const LibraryContract = new ethers.Contract(contractAddress, Library.abi, signer)
+        const libraryTx = await LibraryContract.setFinished(id, true)
+        console.log(libraryTx);
+      } else {
+        console.log("Ethereum object does not exist");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       <div className="flex flex-col items-center bg-[#f3f6f4] text-[#6a50aa] min-h-screen pb-20">
@@ -127,7 +144,10 @@ const Home:NextPage = () => {
                   <div className="font-semibold text-lg text-center mb-4">
                     Books List
                   </div>
-                  <button className="text-xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out">Get Books</button>
+                  <button
+                    className="text-xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out"
+                    onClick={getBooks}
+                  >Get Books</button>
                   {
                     booksUnfinished.length > 0 ?
                       <div className="font-semibold text-lg text-center mb-4 mt-5">
@@ -150,7 +170,30 @@ const Home:NextPage = () => {
                       ))
                     }
                   </div>
+
+                  {
+                    bookFinished.length > 0 ?
+                      <div className="font-semibold text-lg text-center mb-4 mt-5">
+                        Books Finished ({bookFinished.length})
+                      </div> : <div></div>
+                  }
                 </div>
+
+                <div className="flex flex-col justify-center items-center">
+                    {
+                      booksUnfinished.map((book) => (
+                        <Book
+                          key={book.id}
+                          id={parseInt(book.id)}
+                          name={book.name}
+                          year={parseInt(book.year).toString()}
+                          author={book.author}
+                          finished={book.finished.toString()}
+                          clickBookFinished={clickBookFinished}
+                        ></Book>
+                      ))
+                    }
+                  </div>
               </div>
             </div>
           )
